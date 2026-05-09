@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Count Tool</title>
+    <!-- Linking our CSS file correctly using url_for -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    
+
+    <div class="application-container">
+        
+        
+        <header>
+            <h1> Word Count Tool</h1>
+            <p>Upload a plain text (.txt) file to perform analysis.</p>
+        </header>
+
+        
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <div class="input-group">
+                <label for="file_to_analyze" class="input-label">Select Text File (.txt):</label>
+                <input type="file" id="file_to_analyze" name="file_to_analyze" accept=".txt" required>
+            </div>
+            <button type="submit" class="submit-button">Analyze File</button>
+        </form>
+
+
+        {% if error %}
+            <div class="error-notification">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        
+        {% if analysis %}
+            <div class="analysis-results">
+                <h2>Analysis Results</h2>
+                
+                <!-- Counts Section -->
+                <div class="results-grid">
+                    <div class="result-card">
+                        <span class="count-value">{{ "{:,}".format(analysis.words) }}</span>
+                        <span class="count-label">Words</span>
+                    </div>
+                    <div class="result-card">
+                        <span class="count-value">{{ "{:,}".format(analysis.characters) }}</span>
+                        <span class="count-label">Characters</span>
+                    </div>
+                    <div class="result-card">
+                        <span class="count-value">{{ "{:,}".format(analysis.lines) }}</span>
+                        <span class="count-label">Lines</span>
+                    </div>
+                    <div class="result-card">
+                        <span class="count-value">{{ "{:,}".format(analysis.unique_words_count) }}</span>
+                        <span class="count-label">Unique Words</span>
+                    </div>
+                </div>
+
+                <!-- Word Frequency Section -->
+        
+                <h3>Most Common Words (Frequency Distribution)</h3>
+                <div class="frequency-list-container">
+                    <ul class="frequency-list">
+                        {% for word, count in analysis.frequency_distribution %}
+                        <li class="frequency-item">
+                            <span class="f-word">{{ word }}</span>
+                            <span class="f-count">{{ count }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </div>
+        {% endif %}
+
+    </div>
+</body>
+</html>
